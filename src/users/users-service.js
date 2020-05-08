@@ -13,7 +13,7 @@ const UsersService = {
                 'user.location_lng',
                 'user.location_radius'
             )
-            .where('user.id', '=', userId)
+            .where('user.user_id', '=', userId)
             .first()  
     },
     hasUserWithEmail(db, email) {
@@ -49,7 +49,7 @@ const UsersService = {
     },
     serializeUser(user) {
         return {
-            id: user.id,
+            user_id: user.user_id,
             first_name: xss(user.first_name),
             email: xss(user.email),
             location_lat: xss(user.location_lat),

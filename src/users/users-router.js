@@ -55,7 +55,7 @@ usersRouter
                     .then(user => {
                       res
                         .status(201)
-                        .location(path.posix.join(req.originalUrl, `/${user.id}`))
+                        .location(path.posix.join(req.originalUrl, `/${user.user_id}`))
                         .json(UsersService.serializeUser(user))
                     })
                 })
