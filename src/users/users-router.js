@@ -8,8 +8,6 @@ const jsonBodyParser = express.json();
 
 usersRouter
     .get('/', (req, res, next) => {
-        console.log(req.get('Authorization'))
-
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
@@ -63,6 +61,59 @@ usersRouter
                 })
         })
         .catch(next)
+    })
+
+usersRouter
+    .route('/:id')
+    .all((req, res, next) => {
+        const userId = req.params.id;
+        UsersService.getUserInfo(req.app.get('db'), userId)
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({
+                        error: { message: `User doesn't exist` }
+                    })
+                }
+                res.user = user;
+                next()
+            })
+            .catch(next)
+    })
+    .get((req, res, next) => {
+        return user;
+    })
+    .patch(jsonBodyParser, (req, res, next) => {
+        const { first_name, email, password, location, radius } = req.body;
+        const itemToUpdate = { first_name, email, password, location, radius }
+
+        const numberOfValues = Object.values(itemToUpdate).filter(Boolean).length;
+
+        if (numberOfValues === 0) {
+            return res.status(400).json({
+                error: {
+                    message: `Request body must contain either 'first_name', 'email', 'password', location' or 'radius'.`
+                }
+            })
+        }
+
+        UsersService.updateUser(
+            req.app.get('db'),
+            req.params.id,
+            itemToUpdate
+        )
+            .then(numRowsAffected => {
+                res.status(204).end()
+            })
+            .catch(next)
+
+    })
+    .delete((req, res, next) => {
+        const id = req.params.id;
+        UsersService.deleteUser(req.app.get('db'), id)
+            .then(id => {
+                res.status(204).end()
+            })
+            .catch(next)
     })
 
 module.exports = usersRouter;

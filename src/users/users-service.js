@@ -30,6 +30,18 @@ const UsersService = {
             .returning('*')
             .then(([user]) => user)
     },
+    updateUser(db, userId, newUserFields) {
+        return db
+            .from('community_users')
+            .where({ id: userId })
+            .update(newUserFields)
+    },
+    deleteUser(db, userId) {
+        return db
+            .from('community_users')
+            .where({ id: Number(userId) })
+            .del()
+    },
     validatePassword(password) {
         if (password.length < 8) {
             return 'Password must be longer than 8 characters'

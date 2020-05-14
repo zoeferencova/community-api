@@ -173,4 +173,102 @@ describe('Users Endpoints', function() {
                 })
         })
     })
+
+    describe(`PATCH /api/users/:id/`, () => {
+        context(`Given the user doesn't exist`, () => {
+            it(`responds with 404`, () => {
+                const userId = 123456;
+                return supertest(app)
+                    .patch(`/api/users/${userId}`)
+                    .expect(404, { error: { message: `User doesn't exist` } })
+            })
+        })
+
+        context('Given the user does exist', () => {
+            beforeEach('insert users', () =>
+                helpers.seedUsers(
+                    db,
+                    testUsers,
+                )
+            )
+
+            it(`responds with 204 and updates the user information`, () => {
+                const idToUpdate = 3;
+                const updateUser = {
+                    // LIC
+                    location: 'POINT(-73.9341 40.7628)',
+                    radius: '1609.34'
+                }
+
+                const expectedUserInformation = helpers.makeExpectedUserInformation(testUsers[idToUpdate-1])
+
+                const expectedUser = {
+                    ...expectedUserInformation,
+                    ...updateUser
+                }
+
+                return supertest(app)
+                    .patch(`/api/users/${idToUpdate}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[idToUpdate-1]))
+                    .send(updateUser)
+                    .expect(204)
+                    .then(res => 
+                        supertest(app)
+                            .get(`/api/users/`)
+                            .set('Authorization', helpers.makeAuthHeader(testUsers[idToUpdate-1]))
+                            .expect(expectedUser)    
+                    )
+            })
+
+            it(`responds with 400 when no relevant fields supplied`, () => {
+                const idToUpdate = 3;
+                
+                return supertest(app)
+                    .patch(`/api/users/${idToUpdate}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[idToUpdate-1]))
+                    .send({ irrelevantField: 'foo' })
+                    .expect(400, {
+                        error: {
+                            message: `Request body must contain either 'first_name', 'email', 'password', location' or 'radius'.`
+                        }
+                    })
+            })
+        })
+    })
+
+    describe(`DELETE /users/:id`, () => {
+        context(`Given the user doesn't exist`, () => {
+            it(`responds with 404`, () => {
+                const userId = 123456;
+                return supertest(app)
+                    .delete(`/api/users/${userId}`)
+                    .expect(404, { error: { message: `User doesn't exist` } })
+            })
+        })
+
+        context(`Given the user does exist`, () => {
+            beforeEach('insert users', () =>
+                helpers.seedUsers(
+                    db,
+                    testUsers,
+                )
+            )
+
+            it(`responds with 204 and removes the user`, () => {
+                const idToRemove = 2;
+
+                return supertest(app)
+                    .delete(`/api/users/${idToRemove}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[idToRemove-1]))
+                    .expect(204)
+                    .then(res => {
+                        return supertest(app)
+                            .get(`/api/users/${idToRemove}`)
+                            .expect(404, { error: { message: `User doesn't exist` } })
+                    })
+            })
+        })
+
+        
+    })
 })
