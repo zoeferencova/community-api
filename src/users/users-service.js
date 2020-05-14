@@ -9,11 +9,10 @@ const UsersService = {
             .select(
                 'user.first_name',
                 'user.email',
-                'user.location_lat',
-                'user.location_lng',
-                'user.location_radius'
+                'user.location',
+                'user.radius'
             )
-            .where('user.user_id', '=', userId)
+            .where('user.id', '=', userId)
             .first()  
     },
     hasUserWithEmail(db, email) {
@@ -52,9 +51,8 @@ const UsersService = {
             user_id: user.user_id,
             first_name: xss(user.first_name),
             email: xss(user.email),
-            location_lat: xss(user.location_lat),
-            location_lng: xss(user.location_lng),
-            location_radius: xss(user.location_radius)
+            location: user.location,
+            radius: user.radius
         }
     }
 }

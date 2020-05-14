@@ -23,8 +23,9 @@ const AuthService = {
         })
     },
     getUserId(authToken) {
-        const bearerToken = authToken.slice(7, authToken.length)
+        const bearerToken = authToken.slice(7, authToken.length);
         const payload = AuthService.verifyJwt(bearerToken);
+        console.log('payload', payload)
         const userId = payload.user_id;
         return userId;
     }

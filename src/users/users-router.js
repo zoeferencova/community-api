@@ -8,6 +8,8 @@ const jsonBodyParser = express.json();
 
 usersRouter
     .get('/', (req, res, next) => {
+        console.log(req.get('Authorization'))
+
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
@@ -55,7 +57,7 @@ usersRouter
                     .then(user => {
                       res
                         .status(201)
-                        .location(path.posix.join(req.originalUrl, `/${user.user_id}`))
+                        .location(path.posix.join(req.originalUrl, `/${user.id}`))
                         .json(UsersService.serializeUser(user))
                     })
                 })
