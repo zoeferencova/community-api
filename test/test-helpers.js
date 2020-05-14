@@ -8,7 +8,7 @@ function makeUsersArray() {
         first_name: 'Zoe',
         email: 'zoe@gmail.com',
         password: 'ZoePass33!',
-        location: 'Point(-73.8746 40.7502)',
+        location: 'POINT(-73.8746 40.7502)',
         radius: '1609.34'
     },
     {
@@ -16,7 +16,7 @@ function makeUsersArray() {
         first_name: 'Robin',
         email: 'robin@gmail.com',
         password: 'RobinPass1!',
-        location: 'Point(-73.8970 40.7482)',
+        location: 'POINT(-73.8970 40.7482)',
         radius: '3218.69'
     },
     {
@@ -24,7 +24,7 @@ function makeUsersArray() {
         first_name: 'James',
         email: 'james@gmail.com',
         password: 'JamesPass1!',
-        location: 'Point(-73.8903 40.7512)',
+        location: 'POINT(-73.8903 40.7512)',
         radius: '4023.36'
     }
   ]
@@ -175,7 +175,7 @@ function cleanTables(db) {
         community_users,
         community_posts,
         community_categories,
-        community_categories_post_assoc,
+        community_categories_post_assoc
       `
     )
     .then(() =>

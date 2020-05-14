@@ -15,7 +15,7 @@ VALUES
         'zoe@gmail.com', 
         '$2a$12$ynO.KJK.viPPu7aaVf1wLuQKvFIAEW.HaLF3Ij6fhmtnx9XB2AP3.',
         -- Elmhurst Hospital
-        'Point(-73.8746 40.7502)',
+        'POINT(-73.8746 40.7502)',
         -- 1 mi
         '1609.34'
     ),
@@ -24,7 +24,7 @@ VALUES
         'robin@gmail.com', 
         '$2a$12$snsp1yDqA1gBkEhRyr1wseHoEDvOrGS/O6DrIdk0dHPlpSA3ijFHS',
         -- Woodside (home)
-        'Point(-73.8970 40.7482)',
+        'POINT(-73.8970 40.7482)',
         -- 2 mi
         '3218.69'
     ),
@@ -33,7 +33,7 @@ VALUES
         'james@gmail.com', 
         '$2a$12$R0MyKY0l8dninJqTMjk0Ke7jTFAN6VlbLC7YEeCi4b0/.me5/ZML.',
         -- Jackson Heights
-        'Point(-73.8903 40.7512)',
+        'POINT(-73.8903 40.7512)',
         -- 2.5 mi
         '4023.36'
     ),
@@ -42,7 +42,7 @@ VALUES
         'jane@gmail.com', 
         '$2a$12$Wtf9GeIj/awVAB8tvAW75OThJPcHoCe3s1aEN559aKYlVRngLaIJy',
         -- Hmart Woodside
-        'Point(-73.9099 40.7517)',
+        'POINT(-73.9099 40.7517)',
         -- 1.5 mi
         '2414.02'
     ),
@@ -51,7 +51,7 @@ VALUES
         'john@gmail.com', 
         '$2a$12$TvDry/9aDL8xi4h/kePF9ebFZwcGMqJhtCBrP9b5twe7wr3oAKBga',
         -- Jack's Fire Department Sunnyside
-        'Point(-73.9238 40.7470)',
+        'POINT(-73.9238 40.7470)',
         -- 3 mi
         '4828.03'
     );

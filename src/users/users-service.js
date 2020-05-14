@@ -1,15 +1,17 @@
 const bcrypt = require('bcryptjs')
 const xss = require('xss')
+const knexPostgis = require('knex-postgis')
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 
 const UsersService = {
     getUserInfo(db, userId) {
+        const st = knexPostgis(db)
         return db
             .from('community_users AS user')
             .select(
                 'user.first_name',
                 'user.email',
-                'user.location',
+                st.asText('user.location').as('location'),
                 'user.radius'
             )
             .where('user.id', '=', userId)
@@ -48,7 +50,7 @@ const UsersService = {
     },
     serializeUser(user) {
         return {
-            user_id: user.user_id,
+            id: user.id,
             first_name: xss(user.first_name),
             email: xss(user.email),
             location: user.location,
