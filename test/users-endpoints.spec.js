@@ -132,6 +132,30 @@ describe('Users Endpoints', function() {
 
             
         })
+
+        context('Happy path', () => {
+            it(`responds 201, serialized user, storing bcrypted password`, () => {
+                const newUser = {
+                    email: 'test@gmail.com',
+                    password: 'TestPass1!',
+                    first_name: 'Test'
+                }
+    
+                return supertest(app)
+                    .post('/api/users')
+                    .send(newUser)
+                    .expect(201)
+                    .expect(res => {
+                        expect(res.body).to.have.property('id')
+                        expect(res.body.email).to.eql(newUser.email)
+                        expect(res.body.first_name).to.eql(newUser.first_name)
+                        expect(res.body.location).to.eql(null)
+                        expect(res.body.radius).to.eql(null)
+                        expect(res.body).to.not.have.property('password')
+                        expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
+                    })
+            })
+        })
     })
 
     describe('GET /api/users', () => {
@@ -147,30 +171,6 @@ describe('Users Endpoints', function() {
                 .get('/api/users')
                 .set('Authorization', helpers.makeAuthHeader(testUsers[2]))
                 .expect(200, expectedUserInformation)
-        })
-    })
-
-    context('Happy path', () => {
-        it(`responds 201, serialized user, storing bcrypted password`, () => {
-            const newUser = {
-                email: 'test@gmail.com',
-                password: 'TestPass1!',
-                first_name: 'Test'
-            }
-
-            return supertest(app)
-                .post('/api/users')
-                .send(newUser)
-                .expect(201)
-                .expect(res => {
-                    expect(res.body).to.have.property('id')
-                    expect(res.body.email).to.eql(newUser.email)
-                    expect(res.body.first_name).to.eql(newUser.first_name)
-                    expect(res.body.location).to.eql(null)
-                    expect(res.body.radius).to.eql(null)
-                    expect(res.body).to.not.have.property('password')
-                    expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
-                })
         })
     })
 

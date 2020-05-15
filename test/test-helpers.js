@@ -38,7 +38,7 @@ function makePostsArray(users) {
         post_type: 'request',
         description: 'Need help',
         urgency: 'high',
-        date_created: new Date('2029-01-22T16:28:32.615Z')
+        date_created: '2029-01-22T16:28:32.615Z'
     },
     {
         id: 2,
@@ -46,7 +46,7 @@ function makePostsArray(users) {
         post_type: 'offer',
         description: 'Available to help',
         urgency: null,
-        date_created: new Date('2029-01-22T16:28:32.615Z')
+        date_created: '2029-01-22T16:28:32.615Z'
     },
     {
         id: 3,
@@ -54,7 +54,15 @@ function makePostsArray(users) {
         post_type: 'offer',
         description: null,
         urgency: null,
-        date_created: new Date('2029-01-22T16:28:32.615Z')
+        date_created: '2029-01-22T16:28:32.615Z'
+    },
+    {
+        id: 4,
+        user_id: users[2].id,
+        post_type: 'request',
+        description: 'Description',
+        urgency: 'high',
+        date_created: '2029-01-22T16:28:32.615Z'
     },
   ]
 }
@@ -92,46 +100,60 @@ function makePostCategoryAssocArray(posts, categories) {
   return [
     {
         id: 1,
-        post_id: 1,
-        category_id: 3
+        post_id: posts[0].id,
+        category_id: categories[3].id
     },
     {
         id: 2,
-        post_id: 1,
-        category_id: 5
+        post_id: posts[0].id,
+        category_id: categories[4].id
     },
     {
         id: 3,
-        post_id: 2,
-        category_id: 2
+        post_id: posts[1].id,
+        category_id: categories[1].id
     },
     {
         id: 4,
-        post_id: 3,
-        category_id: 4
+        post_id: posts[2].id,
+        category_id: categories[3].id
     },
     {
         id: 5,
-        post_id: 3,
-        category_id: 6
+        post_id: posts[2].id,
+        category_id: categories[5].id
+    },
+    {
+        id: 6,
+        post_id: posts[3].id,
+        category_id: categories[2].id
     },
   ];
 }
 
-function makeExpectedPosts(list, user) {
-    // const filteredList = list.filter(item => 
-    //   item.user_id === user.id && item.status !== 'completed'
-    // ) 
-    
-    // const expectedList = filteredList.map(item => { 
-    //   const pm = pms.find(pm => pm.id === item.pm_id)
-    //   const expected = {...item, pm_name: pm.pm_name, pm_email: pm.pm_email, date_created: item.date_created.toISOString() }
-    //   delete expected['pm_id']
-    //   delete expected['user_id']
-    //   return expected;
-    // }) 
-    
-    // return expectedList;
+function getPostCategories(post, categories, categoryPostAssoc) {
+    const postCategories = categoryPostAssoc.filter(cat => cat.post_id === post.id)
+    const categoryIds = postCategories.map(assoc => assoc.category_id)
+    const categoryNames = []
+    categoryIds.forEach(catId => {
+        const cat = categories.find(cat => cat.id === catId);
+        categoryNames.push(cat.category)
+    })
+    return categoryNames;
+}
+
+function makeExpectedPosts(posts, user, categories, categoryPostAssoc) {
+    const userPosts = posts.filter(post => post.user_id === user.id);
+    const joinedPosts = userPosts.map(post => {
+        post.location = user.location;
+        post.radius = user.radius;
+        post.first_name = user.first_name;
+        post.categories = getPostCategories(post, categories, categoryPostAssoc);
+        delete post.id;
+        delete post.user_id;
+        return post;
+    })
+    return joinedPosts;
 }
 
 function makeExpectedUserInformation(user) {
@@ -215,7 +237,7 @@ function seedTables(db, users, posts, categories, category_post_assoc) {
     await trx.into('community_users').insert(users)
     await trx.into('community_posts').insert(posts)
     await trx.into('community_categories').insert(categories)
-    await trx.into('coordinator_categories_post_assoc').insert(category_post_assoc)
+    await trx.into('community_categories_post_assoc').insert(category_post_assoc)
    
 
     await Promise.all([
