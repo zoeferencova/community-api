@@ -267,8 +267,6 @@ describe('Users Endpoints', function() {
                             .expect(404, { error: { message: `User doesn't exist` } })
                     })
             })
-        })
-
-        
+        })  
     })
 })

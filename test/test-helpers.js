@@ -149,7 +149,6 @@ function makeExpectedPosts(posts, user, categories, categoryPostAssoc) {
         post.radius = user.radius;
         post.first_name = user.first_name;
         post.categories = getPostCategories(post, categories, categoryPostAssoc);
-        delete post.id;
         delete post.user_id;
         return post;
     })
