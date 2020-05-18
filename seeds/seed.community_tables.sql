@@ -64,6 +64,15 @@ VALUES
     (4, 'offer', null, null),
     (5, 'request', 'Need help with groceries', 'low');
 
+INSERT INTO community_categories (category) 
+VALUES 
+    ('Picking up supplies'),
+    ('Running errands'),
+    ('Phone call'),
+    ('Online chat'),
+    ('Dog walking'),
+    ('Other');
+
 INSERT INTO community_categories_post_assoc (post_id, category_id)
 VALUES
     (1, 2),

@@ -136,8 +136,60 @@ describe('Posts Endpoints', function() {
         }) 
     })
 
+    describe(`GET /api/posts/:id`, () => {
+        context(`Given the post doesn't exist`, () => {
+            beforeEach('insert data', () =>
+                helpers.seedTables(
+                    db,
+                    testUsers,
+                    testPosts,
+                    testCategories,
+                    testPostCategoryAssoc
+                )
+            )
+
+            it(`responds with 404`, () => {
+                const itemId = 123456;
+                return supertest(app)
+                    .patch(`/api/posts/${itemId}`)
+                    .expect(404, { error: { message: `Post doesn't exist` } })
+            })
+        })
+
+        context(`Given the post exists`, () => {
+            beforeEach('insert data', () =>
+                helpers.seedTables(
+                    db,
+                    testUsers,
+                    testPosts,
+                    testCategories,
+                    testPostCategoryAssoc
+                )
+            )
+
+            it(`responds with 200 and the requested post`, () => {
+                const requestedPost = testPosts[2];
+                const expectedPost = helpers.makeExpectedPosts(testPosts, testUsers, testCategories, testPostCategoryAssoc)[requestedPost.id - 1]
+
+                return supertest(app)
+                    .get(`/api/posts/${requestedPost.id}`)
+                    .expect(200, expectedPost)
+            })
+        })
+    })
+
     describe(`PATCH /api/posts/:id`, () => {
         context(`Given the post doesn't exist`, () => {
+            beforeEach('insert data', () =>
+                helpers.seedTables(
+                    db,
+                    testUsers,
+                    testPosts,
+                    testCategories,
+                    testPostCategoryAssoc
+                )
+            )
+
             it(`responds with 404`, () => {
                 const itemId = 123456;
                 return supertest(app)
@@ -158,93 +210,90 @@ describe('Posts Endpoints', function() {
             )
 
             it(`responds with 204, deletes old category-post associations and inserts new ones if only category_ids are supplied in update object`, () => {
-                const idToUpdate = 3;
-                const updateItem = {
+                const idToUpdate = 1;
+                const updatePost = {
                     category_ids: [1, 2]
                 }
 
-                const expectedItem = helpers.makeExpectedPosts([testPosts[idToUpdate-1]], testUsers, testCategories, testPostCategoryAssoc)[0]
-                const formattedCategories = updateItem.category_ids.map(catId => {
+                const expectedPost = helpers.makeExpectedPosts(testPosts, testUsers, testCategories, testPostCategoryAssoc)[idToUpdate-1]
+                const formattedCategories = updatePost.category_ids.map(catId => {
                     const foundCategory = testCategories.find(cat => cat.id === catId)
                     return foundCategory.category;
                 })
 
-                expectedItem.categories = formattedCategories;
-                delete expectedItem.category_ids;
+                expectedPost.categories = formattedCategories;
+                delete expectedPost.category_ids;
 
                 return supertest(app)
                     .patch(`/api/posts/${idToUpdate}`)
-                    .send(updateItem)
+                    .send(updatePost)
                     .expect(204)
                     .then(res => 
                         supertest(app)
                             .get(`/api/posts/${idToUpdate}`)
-                            .expect(expectedItem)    
+                            .expect(expectedPost)    
                     )
             })
 
             it(`responds with 204, deletes old category-post associations and inserts new ones and updates additional fields when category_ids and other fields are present`, () => {
                 const idToUpdate = 3;
-                const updateItem = {
-                    category_ids: [1, 2],
-                    urgency: 'low',
-                    description: 'description'
+                const updatePost = {
+                    category_ids: [4, 5],
+                    urgency: 'medium',
+                    description: 'Hello'
                 }
 
-                const formattedItem = helpers.makeExpectedPosts([testPosts[idToUpdate-1]], testUsers, testCategories, testPostCategoryAssoc)[0]
-                const formattedCategories = updateItem.category_ids.map(catId => {
+                const formattedPost = helpers.makeExpectedPosts(testPosts, testUsers, testCategories, testPostCategoryAssoc)[idToUpdate-1]
+                const formattedCategories = updatePost.category_ids.map(catId => {
                     const foundCategory = testCategories.find(cat => cat.id === catId)
                     return foundCategory.category;
                 })
-
-                formattedItem.categories = formattedCategories;
-                delete formattedItem.category_ids;
-
-                const expectedItem = {
-                    ...formattedItem,
-                    ...updateItem
+                
+                const expectedPost = {
+                    ...formattedPost,
+                    ...updatePost
                 }
 
-                delete expectedItem.category_ids;
+                delete expectedPost.category_ids;
+                expectedPost.categories = formattedCategories;
 
                 return supertest(app)
                     .patch(`/api/posts/${idToUpdate}`)
-                    .send(updateItem)
+                    .send(updatePost)
                     .expect(204)
                     .then(res => 
                         supertest(app)
                             .get(`/api/posts/${idToUpdate}`)
-                            .expect(expectedItem)    
+                            .expect(expectedPost)    
                     )
             })
 
             it(`responds with 204 and updates relevant fields when only fields that are not category_ids are present`, () => {
-                const idToUpdate = 1;
-                const updateItem = {
+                const idToUpdate = 3;
+                const updatePost = {
                     urgency: 'low',
                     description: 'description'
                 }
 
-                const formattedItem = helpers.makeExpectedPosts([testPosts[idToUpdate-1]], testUsers, testCategories, testPostCategoryAssoc)[0]
-
-                const expectedItem = {
-                    ...formattedItem,
-                    ...updateItem
+                const formattedPost = helpers.makeExpectedPosts(testPosts, testUsers, testCategories, testPostCategoryAssoc)[idToUpdate-1]
+                const expectedPost = {
+                    ...formattedPost,
+                    ...updatePost
                 }
 
                 return supertest(app)
                     .patch(`/api/posts/${idToUpdate}`)
-                    .send(updateItem)
+                    .send(updatePost)
                     .expect(204)
                     .then(res => 
                         supertest(app)
                             .get(`/api/posts/${idToUpdate}`)
-                            .expect(expectedItem)    
+                            .expect(expectedPost)    
                     )
             })
 
             it(`responds with 400 when no relevant fields supplied`, () => {
-                const idToUpdate = 3;
+                const idToUpdate = 4;
                 return supertest(app)
                     .patch(`/api/posts/${idToUpdate}`)
                     .send({ irrelevantField: 'foo' })
@@ -256,7 +305,7 @@ describe('Posts Endpoints', function() {
             })
 
             it(`responds with 400 when category_ids array is updated with an empty array`, () => {
-                const idToUpdate = 3;
+                const idToUpdate = 1;
                 return supertest(app)
                     .patch(`/api/posts/${idToUpdate}`)
                     .send({ category_ids: [] })
@@ -264,6 +313,54 @@ describe('Posts Endpoints', function() {
                         error: {
                             message: `'category_ids' must include at least one value.`
                         }
+                    })
+            })
+        })
+    })
+
+    describe(`DELETE /posts/:id`, () => {
+        context(`Given the post doesn't exist`, () => {
+            beforeEach('insert data', () =>
+                helpers.seedTables(
+                    db,
+                    testUsers,
+                    testPosts,
+                    testCategories,
+                    testPostCategoryAssoc
+                )
+            )
+
+            it('responds with 404', () => {
+                const itemId = 12345;
+                return supertest(app)
+                    .delete(`/api/posts/${itemId}`)
+                    .expect(404, { error: { message: `Post doesn't exist` } })
+            })
+        })
+
+        context(`Given the post does exist`, () => {
+            beforeEach('insert data', () =>
+                helpers.seedTables(
+                    db,
+                    testUsers,
+                    testPosts,
+                    testCategories,
+                    testPostCategoryAssoc
+                )
+            )
+
+            it(`responds with 204 and removes the post`, () => {
+                const idToRemove = 2;
+                const postUserId = testPosts[idToRemove-1].user_id;
+
+                return supertest(app)
+                    .delete(`/api/posts/${idToRemove}`)
+                    .set('Authorization', helpers.makeAuthHeader(testUsers[postUserId-1]))
+                    .expect(204)
+                    .then(res => {
+                        return supertest(app)
+                            .get(`/api/posts/${idToRemove}`)
+                            .expect(404)
                     })
             })
         })

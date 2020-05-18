@@ -82,9 +82,15 @@ const PostsService = {
     updatePost(db, postId, newPost) {
         return db
             .from('community_posts')
-            .where({ id: parseInt(postId) })
+            .where({ id: postId })
             .update(newPost)
-    }
+    },
+    deletePost(db, postId) {
+        return db
+            .from('community_posts')
+            .where({ id: parseInt(postId)})
+            .del()
+    },
 }
 
 module.exports = PostsService;

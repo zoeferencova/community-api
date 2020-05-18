@@ -231,7 +231,7 @@ function seedUsers(db, users) {
     )
 }
 
-function seedTables(db, users, posts, categories, category_post_assoc) {
+function seedTables(db, users, posts, categories, catPostAssoc) {
   
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
@@ -239,7 +239,7 @@ function seedTables(db, users, posts, categories, category_post_assoc) {
     await trx.into('community_users').insert(users)
     await trx.into('community_posts').insert(posts)
     await trx.into('community_categories').insert(categories)
-    await trx.into('community_categories_post_assoc').insert(category_post_assoc)
+    await trx.into('community_categories_post_assoc').insert(catPostAssoc)
    
 
     await Promise.all([
@@ -257,7 +257,7 @@ function seedTables(db, users, posts, categories, category_post_assoc) {
       ),
       trx.raw(
         `SELECT setval('community_categories_post_assoc_id_seq', ?)`,
-        [category_post_assoc[category_post_assoc.length - 1].id],
+        [catPostAssoc[catPostAssoc.length - 1].id],
       ),
     ])
   })

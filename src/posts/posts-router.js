@@ -94,18 +94,26 @@ postsRouter
             .catch(next)
     })
     .patch(jsonBodyParser, (req, res, next) => {
-        const { description, urgency, category_ids } = req.body;
-        const postToUpdate = { description, urgency, category_ids }
-        
-        const numberOfValues = Object.values(postToUpdate).filter(Boolean).length;
+        const postToUpdate = req.body;
+        const possibleValues = ['description', 'urgency', 'category_ids']
+    
+        const irrelevantValues = Object.keys(postToUpdate).filter(key => !possibleValues.includes(key))
+
+        irrelevantValues.forEach(value => {
+            delete postToUpdate[value]
+        })
+
+        const numberOfRelevantValues = Object.values(postToUpdate).filter(Boolean).length;
 
         const updatePost = () =>  {
+            delete postToUpdate.category_ids;
+
             PostsService.updatePost(
                 req.app.get('db'),
                 req.params.id,
                 postToUpdate,
             )
-            .then(numRowsAffected => {
+            .then(numberOfRowsAffected => {
                 res.status(204).end()
             })
             .catch(next)
@@ -114,30 +122,26 @@ postsRouter
         // Delete old associations and insert new ones
         const updateCategoryPostAssoc = () => {
             const catIdArray = CategoryPostService.makeObjectArray(postToUpdate.category_ids);
-            delete postToUpdate.category_ids;
 
             CategoryPostService.deleteAssoc(
                 req.app.get('db'),
-                req.params.id
-            )
-                .then(id => {
-                    res.status(204)
-                })
-                .catch(next)
-
-            CategoryPostService.insertAssoc(
-                req.app.get('db'),
                 req.params.id,
-                catIdArray
             )
                 .then(assoc => {
-                    res.status(204).end()
+                    CategoryPostService.insertAssoc(
+                        req.app.get('db'),
+                        req.params.id,
+                        catIdArray
+                    )
+                        .then(id => {
+                            res.status(204).end()
+                        })
                 })
                 .catch(next)
         }
 
-        // Return error if no possible update values are present
-        if (numberOfValues === 0) {
+        // Return error if no update values are present
+        if (numberOfRelevantValues === 0) {
             return res.status(400).json({
                 error: {
                     message: `Request body must contain either 'category_ids', 'description' or 'urgency'.`
@@ -159,14 +163,22 @@ postsRouter
             updatePost()
 
         // If update object contains only category_ids
-        } else if (numberOfValues === 1 && postToUpdate.category_ids) {
+        } else if (numberOfRelevantValues === 1 && postToUpdate.category_ids) {
             updateCategoryPostAssoc()
         
         // If update object contains category_ids and other item(s)
-        } else if (numberOfValues > 1 && postToUpdate.category_ids) {
+        } else if (numberOfRelevantValues > 1 && postToUpdate.category_ids) {
             updateCategoryPostAssoc()
             updatePost()
         } 
+    })
+    .delete((req, res, next) => {
+        const postId = req.params.id;
+        PostsService.deletePost(req.app.get('db'), postId)
+           .then(id => {
+               res.status(204).end()
+           })
+           .catch(next)
     })
 
 module.exports = postsRouter;
