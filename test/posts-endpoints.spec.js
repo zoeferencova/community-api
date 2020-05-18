@@ -1,5 +1,4 @@
 const knex = require('knex');
-const knexPostgis = require('knex-postgis');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 

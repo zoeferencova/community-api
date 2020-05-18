@@ -1,4 +1,5 @@
 const express = require('express');
+const xss = require('xss');
 const AuthService = require('../auth/auth-service');
 const UsersService = require('../users/users-service');
 const PostsService = require('./posts-service');
@@ -7,13 +8,26 @@ const CategoryPostService = require('../category-post/category-post-service');
 const postsRouter = express.Router();
 const jsonBodyParser = express.json();
 
+const sanitizeResponse = post => ({
+    id: post.id,
+    post_type: xss(post.post_type),
+    description: post.description !== null ? xss(post.description) : post.description,
+    urgency: post.urgency !== null ? xss(post.urgency) : post.urgency,
+    date_created: post.date_created,
+    location: post.location,
+    radius: post.radius,
+    first_name: xss(post.first_name),
+    categories: post.categories,
+    distance_from_user: post.distance_from_user
+})
+
 postsRouter
     .route('/')
     .get((req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         PostsService.getUserPosts(req.app.get('db'), userId)
             .then(posts => {
-                return res.json(posts)
+                return res.json(posts.map(sanitizeResponse))
             })
     })
 
@@ -48,7 +62,7 @@ postsRouter
             .then(post => {
                 res
                     .status(201)
-                    .json(post)
+                    .json(sanitizeResponse(post))
             })
             .catch(next)
     })
@@ -61,7 +75,7 @@ postsRouter
             .then(user => {
                 PostsService.getNeighborhoodPosts(req.app.get('db'), user)
                     .then(posts => {
-                        return res.json(posts)
+                        return res.json(posts.map(sanitizeResponse))
                     })
             })
         
@@ -89,7 +103,7 @@ postsRouter
         const id = req.params.id;
         PostsService.getPostById(req.app.get('db'), id)
             .then(post => {
-                return res.json(post)
+                return res.json(sanitizeResponse(post))
             })
             .catch(next)
     })

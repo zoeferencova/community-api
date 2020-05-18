@@ -127,7 +127,7 @@ function makePostCategoryAssocArray(posts, categories) {
         id: 6,
         post_id: posts[3].id,
         category_id: categories[2].id
-    },
+    }
   ];
 }
 
@@ -159,28 +159,6 @@ function makeExpectedUserInformation(user) {
     location: user.location,
     radius: user.radius
   }
-}
-
-function makeExpectedDistancePosts() {
-    return [
-
-    ]
-}
-
-function makeMaliciousPost(user) {
-  const maliciousPost = {
-    id: 911,
-    user_id: user.id,
-    post_type: 'request',
-    description: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. Malicious post <script>alert("xss");</script>`,
-    urgency: 'low',
-    date_created: new Date(),
-  }
-  const expectedPost = {
-    ...makeExpectedPosts([maliciousPost], user),
-    description: `Bad image <img src="https://url.to.file.which/does-not.exist">. Malicious post &lt;script&gt;alert(\"xss\");&lt;/script&gt;`,
-  }
-  return expectedPost;
 }
 
 function makeFixtures() {
