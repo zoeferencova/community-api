@@ -80,7 +80,11 @@ usersRouter
             .catch(next)
     })
     .get((req, res, next) => {
-        return user;
+        const userId = AuthService.getUserId(req.get('Authorization'));
+        UsersService.getUserInfo(req.app.get('db'), userId)
+            .then(user => {
+                return res.json(user)
+            })
     })
     .patch(jsonBodyParser, (req, res, next) => {
         const { first_name, email, password, location, radius } = req.body;

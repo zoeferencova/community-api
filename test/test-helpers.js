@@ -16,7 +16,7 @@ function makeUsersArray() {
         first_name: 'Robin',
         email: 'robin@gmail.com',
         password: 'RobinPass1!',
-        location: 'POINT(-73.8970 40.7482)',
+        location: 'POINT(-73.897 40.7482)',
         radius: '3218.69'
     },
     {
@@ -142,17 +142,14 @@ function getPostCategories(post, categories, categoryPostAssoc) {
     return categoryNames;
 }
 
-function makeExpectedPosts(posts, user, categories, categoryPostAssoc) {
-    const userPosts = posts.filter(post => post.user_id === user.id);
-    const joinedPosts = userPosts.map(post => {
-        post.location = user.location;
-        post.radius = user.radius;
-        post.first_name = user.first_name;
-        post.categories = getPostCategories(post, categories, categoryPostAssoc);
-        delete post.user_id;
-        return post;
+function makeExpectedPosts(posts, users, categories, categoryPostAssoc) {
+    const expectedPosts = posts.map(post => {
+        const user = users.find(user => user.id === post.user_id)
+        const expected = {...post, location: user.location, radius: user.radius, first_name: user.first_name, categories: getPostCategories(post, categories, categoryPostAssoc)}
+        delete expected['user_id']
+        return expected;
     })
-    return joinedPosts;
+    return expectedPosts;
 }
 
 function makeExpectedUserInformation(user) {
@@ -162,6 +159,12 @@ function makeExpectedUserInformation(user) {
     location: user.location,
     radius: user.radius
   }
+}
+
+function makeExpectedDistancePosts() {
+    return [
+
+    ]
 }
 
 function makeMaliciousPost(user) {
