@@ -256,7 +256,6 @@ module.exports = {
   makePostCategoryAssocArray,
   makeExpectedPosts,
   makeExpectedUserInformation,
-  makeMaliciousPost,
   makeFixtures,
   cleanTables,
   seedUsers,
