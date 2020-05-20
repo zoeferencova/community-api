@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
-const UsersService = require('./users-service')
-const AuthService = require('../auth/auth-service')
+const UsersService = require('./users-service');
+const AuthService = require('../auth/auth-service');
+const PostsService = require('../posts/posts-service');
 
 const usersRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -11,6 +12,7 @@ usersRouter
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
+                PostsService.fixLocationAndRadius(user)
                 return res.json(user)
             })
     })
@@ -83,6 +85,7 @@ usersRouter
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
+                PostsService.fixLocationAndRadius(user)
                 return res.json(user)
             })
     })

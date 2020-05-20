@@ -9,9 +9,12 @@ const UsersService = {
         return db
             .from('community_users AS user')
             .select(
+                'user.id',
                 'user.first_name',
                 'user.email',
-                st.asText('user.location').as('location'),
+                'user.location AS location',
+                db.raw(`ST_X(location::geometry) AS lng`),
+                db.raw(`ST_Y(location::geometry) AS lat`),
                 'user.radius'
             )
             .where('user.id', '=', userId)

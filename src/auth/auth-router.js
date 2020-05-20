@@ -1,8 +1,21 @@
 const express = require('express');
-const AuthService = require('./auth-service')
+const AuthService = require('./auth-service');
 
 const authRouter = express.Router();
 const jsonBodyParser = express.json();
+
+const sanitizeResponse = post => ({
+    id: post.id,
+    post_type: xss(post.post_type),
+    description: post.description !== null ? xss(post.description) : post.description,
+    urgency: post.urgency !== null ? xss(post.urgency) : post.urgency,
+    date_created: post.date_created,
+    location: post.location,
+    radius: post.radius,
+    first_name: xss(post.first_name),
+    categories: post.categories,
+    distance_from_user: post.distance_from_user
+})
 
 authRouter
     .post('/login', jsonBodyParser, (req, res, next) => {
@@ -38,6 +51,7 @@ authRouter
 
                         res.send({
                             authToken: AuthService.createJwt(sub, payload),
+                            user: dbUser
                         })
                     })
             })

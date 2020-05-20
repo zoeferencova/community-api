@@ -27,6 +27,9 @@ postsRouter
         const userId = AuthService.getUserId(req.get('Authorization'));
         PostsService.getUserPosts(req.app.get('db'), userId)
             .then(posts => {
+                posts.map(post => {
+                    PostsService.fixLocationAndRadius(post)
+                })
                 return res.json(posts.map(sanitizeResponse))
             })
     })
@@ -62,7 +65,7 @@ postsRouter
             .then(post => {
                 res
                     .status(201)
-                    .json(sanitizeResponse(post))
+                    .json(sanitizeResponse(PostsService.fixLocationAndRadius(post)))
             })
             .catch(next)
     })
@@ -73,8 +76,10 @@ postsRouter
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
+                console.log(user)
                 PostsService.getNeighborhoodPosts(req.app.get('db'), user)
                     .then(posts => {
+                        posts.map(post => PostsService.fixLocationAndRadius(post))
                         return res.json(posts.map(sanitizeResponse))
                     })
             })
@@ -103,6 +108,7 @@ postsRouter
         const id = req.params.id;
         PostsService.getPostById(req.app.get('db'), id)
             .then(post => {
+                PostsService.fixLocationAndRadius(post)
                 return res.json(sanitizeResponse(post))
             })
             .catch(next)
