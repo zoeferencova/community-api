@@ -1,5 +1,6 @@
 const express = require('express');
 const AuthService = require('./auth-service');
+const UsersService = require('../users/users-service');
 
 const authRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -58,5 +59,30 @@ authRouter
 
         .catch(next)
     })
+
+authRouter
+    .post('/confirm-password', jsonBodyParser, (req, res, next) => {
+        const { password } = req.body;
+        const userId = AuthService.getUserId(req.get('Authorization'));
+        UsersService.getUserInfo(req.app.get('db'), userId)
+            .then(user => {
+                AuthService.getUserWithEmail(req.app.get('db'), user.email)
+                    .then(dbUser => {
+                        AuthService.comparePasswords(password, dbUser.password)
+                            .then(compareMatch => {
+                                if (!compareMatch) {
+                                    return res.status(400).json({
+                                        error: `Incorrect old password`
+                                    }) 
+                                } else {
+                                    return res.send('correct')
+                                }
+                                
+                            })
+                    })
+                
+            })
+    })
+
 
 module.exports = authRouter;

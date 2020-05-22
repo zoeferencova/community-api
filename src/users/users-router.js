@@ -103,16 +103,38 @@ usersRouter
             })
         }
 
-        UsersService.updateUser(
-            req.app.get('db'),
-            req.params.id,
-            itemToUpdate
-        )
-            .then(numRowsAffected => {
-                res.status(204).end()
-            })
-            .catch(next)
+        if (itemToUpdate.password !== undefined) {
+            const passwordError = UsersService.validatePassword(password)
 
+            if (passwordError) {
+                return res.status(400).json({ error: passwordError })
+            }
+
+            UsersService.hashPassword(password)
+                .then(hashedPassword => {
+                    updatePassword = { password: hashedPassword }
+
+                    UsersService.updateUser(
+                        req.app.get('db'),
+                        req.params.id,
+                        updatePassword
+                    )
+                        .then(numRowsAffected => {
+                            res.status(204).end()
+                        })
+                        .catch(next)
+                })
+        } else {
+            UsersService.updateUser(
+                req.app.get('db'),
+                req.params.id,
+                itemToUpdate
+            )
+                .then(numRowsAffected => {
+                    res.status(204).end()
+                })
+                .catch(next)
+        }
     })
     .delete((req, res, next) => {
         const id = req.params.id;

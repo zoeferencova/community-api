@@ -10,6 +10,7 @@ const jsonBodyParser = express.json();
 
 const sanitizeResponse = post => ({
     id: post.id,
+    user_id: post.user_id,
     post_type: xss(post.post_type),
     description: post.description !== null ? xss(post.description) : post.description,
     urgency: post.urgency !== null ? xss(post.urgency) : post.urgency,
@@ -76,7 +77,6 @@ postsRouter
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
-                console.log(user)
                 PostsService.getNeighborhoodPosts(req.app.get('db'), user)
                     .then(posts => {
                         posts.map(post => PostsService.fixLocationAndRadius(post))

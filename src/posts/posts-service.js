@@ -21,6 +21,7 @@ const PostsService = {
                 db.raw(`ST_Y(location::geometry) AS lat`),
                 'community_users.radius',
                 'community_users.first_name',
+                'community_posts.user_id',
                 db.raw('array_agg(community_categories.category) as categories')
             )
             .groupBy('community_posts.id', 'community_users.location', 'community_users.radius', 'community_users.first_name')
@@ -45,6 +46,7 @@ const PostsService = {
                 db.raw(`ST_Y(location::geometry) AS lat`),
                 'community_users.radius',
                 'community_users.first_name',
+                'community_posts.user_id',
                 db.raw('array_agg(community_categories.category) as categories')
             )
             .where({ 'community_posts.user_id': userId })
@@ -60,6 +62,7 @@ const PostsService = {
             .join('community_categories', { 'community_categories.id': 'community_categories_post_assoc.category_id' })
             .select(
                 'community_posts.id',
+                'community_posts.user_id',
                 'community_posts.post_type',
                 'community_posts.description',
                 'community_posts.urgency',
