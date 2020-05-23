@@ -34,7 +34,7 @@ app.set('db', db);
 // Socket.io setup
 const io = module.exports.io = require('socket.io')(server);
 const SocketManager = require('./chat/socket-manager');
-io.of('/api/chat').on('connection', SocketManager);
+io.on('connection', SocketManager);
 
 // Error handler middleware
 app.use(function errorHandler(error, req, res, next) {

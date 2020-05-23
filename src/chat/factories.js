@@ -5,7 +5,10 @@ const createMessage = ({ message="", sender } = {}) => {
         id: uuid(),
         timestamp: getTime(new Date(Date.now())),
         message,
-        sender
+        sender: {
+            first_name: sender.first_name,
+            id: sender.id
+        }
     }
 }
 
