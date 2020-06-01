@@ -5,7 +5,9 @@ BEGIN;
 TRUNCATE
     community_users,
     community_posts,
-    community_categories_post_assoc
+    community_categories_post_assoc,
+    community_chats,
+    community_messages
     RESTART IDENTITY CASCADE;
 
 INSERT INTO community_users (first_name, email, password, location, radius)
@@ -82,5 +84,23 @@ VALUES
     (4, 5),
     (5, 6),
     (5, 1);
+
+INSERT INTO community_chats (user1_id, user2_id)
+VALUES
+    (1, 2),
+    (1, 3),
+    (3, 2),
+    (3, 4);
+
+INSERT INTO community_messages (chat_id, sender_id, message_content)
+VALUES
+    (1, 1, 'hi'),
+    (1, 2, 'hello'),
+    (2, 1, 'hi there'),
+    (2, 3, 'whats up'),
+    (3, 3, 'yooo'),
+    (3, 2, 'dup!'),
+    (4, 3, 'hello there'),
+    (4, 4, 'heeeyyy');
 
 COMMIT;

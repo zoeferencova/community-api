@@ -1,10 +1,8 @@
 const { io } = require('../app');
 const { createChat, createMessage } = require('./factories');
-const { USER_CONNECTED, USER_DISCONNECTED, COMMUNITY_CHAT, MESSAGE_RECEIVED, MESSAGE_SENT, TYPING } = require('./events');
+const { USER_CONNECTED, USER_DISCONNECTED, COMMUNITY_CHAT, MESSAGE_RECEIVED, MESSAGE_SENT, TYPING, PRIVATE_MESSAGE } = require('./events');
 
 let connectedUsers = { }
-
-let currentUser = { }
 
 let communityChat = createChat();
 
@@ -15,9 +13,9 @@ module.exports = function(socket) {
     let sendTypingFromUser;
 
     socket.on(USER_CONNECTED, user => {
+        user.socketId = socket.id;
         connectedUsers = addUser(connectedUsers, user);
         socket.user = user;
-        currentUser = user;
 
         sendMessageToChatFromUser = sendMessageToChat(user)
         sendTypingFromUser = sendTypingToChat(user)
@@ -46,11 +44,20 @@ module.exports = function(socket) {
     socket.on(TYPING, ({ chatId, isTyping }) => {
         sendTypingFromUser(chatId, isTyping)
     })
+
+    socket.on(PRIVATE_MESSAGE, ({ receiver, sender }) => {
+        if (receiver in connectedUsers) {
+            const newChat = createChat({ name: `${receiver.first_name} & ${sender.first_name}`, users: [receiver, sender] })
+            const receiverSocket = connectedUsers[receiver.id].socket_id
+            socket.to(receiverSocket).emit(PRIVATE_MESSAGE, newChat)
+            socket.emit(PRIVATE_MESSAGE, newChat)
+        }
+    })
 }
 
 function sendTypingToChat(user) {
     return (chatId, isTyping) => {
-        return io.emit(`${TYPING}-${chatId}`, { user, isTyping })
+        io.emit(`${TYPING}-${chatId}`, { user, isTyping })
     }
 }
 
@@ -61,7 +68,7 @@ function sendMessageToChat(sender) {
 }
 
 function addUser(userList, user) {
-    const formattedUser = { id: user.id, first_name: user.first_name }
+    const formattedUser = { id: user.id, first_name: user.first_name, socket_id: user.socketId }
     let newList = Object.assign({}, userList);
     newList[user.id] = formattedUser;
     return newList;
