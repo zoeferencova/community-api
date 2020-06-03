@@ -33,7 +33,7 @@ VALUES
     (
         'James', 
         'james@gmail.com', 
-        '$2a$12$R0MyKY0l8dninJqTMjk0Ke7jTFAN6VlbLC7YEeCi4b0/.me5/ZML.',
+        '$2a$12$ynO.KJK.viPPu7aaVf1wLuQKvFIAEW.HaLF3Ij6fhmtnx9XB2AP3.',
         -- Jackson Heights
         'POINT(-73.8903 40.7512)',
         -- 2.5 mi
@@ -87,10 +87,10 @@ VALUES
 
 INSERT INTO community_chats (user1_id, user2_id)
 VALUES
-    (1, 2),
-    (1, 3),
-    (3, 2),
-    (3, 4);
+    (1, 2, 1),
+    (1, 3, 3),
+    (3, 2, 2),
+    (3, 4, 4);
 
 INSERT INTO community_messages (chat_id, sender_id, message_content)
 VALUES

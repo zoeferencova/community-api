@@ -9,12 +9,12 @@ const jsonBodyParser = express.json();
 messagesRouter
     .route('/')
     .post(jsonBodyParser, (req, res, next) => {
-        const senderId = AuthService.getUserId(req.get('Authorization'));
-        const { chatId, message } = req.body;
+        const sender_id = AuthService.getUserId(req.get('Authorization'));
+        const { chat_id, message_content } = req.body;
         const newMessage = { 
-            sender_id: parseInt(senderId), 
-            chat_id: parseInt(chatId),
-            message_content: message
+            sender_id: parseInt(sender_id), 
+            chat_id: parseInt(chat_id),
+            message_content: message_content
         };
 
         for (const [key, value] of Object.entries(newMessage)) {
@@ -27,20 +27,20 @@ messagesRouter
             }
         }
 
-        ChatsService.getChatById(req.app.get('db'), chatId)
+        ChatsService.getNewChatById(req.app.get('db'), chat_id)
             .then(chat => {
                 if (!chat) {
                     return res.status(400).json({
                         error: {
-                            message: `There is no chat with an id of ${chatId}`
+                            message: `There is no chat with an id of ${chat_id}`
                         }
                     })
                 }
         
-                if (parseInt(chat.user1.id) !== parseInt(senderId) && parseInt(chat.user2.id) !== parseInt(senderId)) {
+                if (parseInt(chat.user1.id) !== parseInt(sender_id) && parseInt(chat.user2.id) !== parseInt(sender_id)) {
                     return res.status(400).json({
                         error: {
-                            message: `Current user is not part of the chat with the id of ${chatId}`
+                            message: `Current user is not part of the chat with the id of ${chat_id}`
                         }
                     })
                 }

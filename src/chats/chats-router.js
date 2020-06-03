@@ -34,10 +34,12 @@ chatsRouter
             req.app.get('db'),
             newChat
         )
-            .then(chat => {
-                res
-                    .status(201)
-                    .json(chat)
+            .then(chatId => {
+                ChatsService.getNewChatById(req.app.get('db'), chatId)
+                    .then(chat => {
+                        return res.status(201).json(chat)
+                    })
+                    .catch(next)
             })
             .catch(next)
     })
@@ -45,7 +47,7 @@ chatsRouter
 chatsRouter
     .route('/:id')
     .all((req, res, next) => {
-        ChatsService.getChatById(
+        ChatsService.getNewChatById(
             req.app.get('db'),
             req.params.id,
         )
@@ -62,7 +64,7 @@ chatsRouter
     })
     .get((req, res, next) => {
         const chatId = req.params.id;
-        ChatsService.getChatById(req.app.get('db'), chatId)
+        ChatsService.getNewChatById(req.app.get('db'), chatId)
             .then(chat => {
                 return res.json(chat)
             })
