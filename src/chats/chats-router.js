@@ -17,8 +17,8 @@ chatsRouter
 
     .post(jsonBodyParser, (req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
-        const { user2Id } = req.body;
-        const newChat = { user1_id: parseInt(userId), user2_id: parseInt(user2Id) };
+        const { user2Id, postId } = req.body;
+        const newChat = { user1_id: parseInt(userId), user2_id: parseInt(user2Id), post_id: parseInt(postId) };
 
         for (const [key, value] of Object.entries(newChat)) {
             if (value === '' || value === undefined) {

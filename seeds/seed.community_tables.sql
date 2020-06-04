@@ -85,7 +85,7 @@ VALUES
     (5, 6),
     (5, 1);
 
-INSERT INTO community_chats (user1_id, user2_id)
+INSERT INTO community_chats (user1_id, user2_id, post_id)
 VALUES
     (1, 2, 1),
     (1, 3, 3),
