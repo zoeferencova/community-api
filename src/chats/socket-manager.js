@@ -1,6 +1,6 @@
 const { io } = require('../app');
 const { createMessage } = require('./factories');
-const { USER_CONNECTED, USER_DISCONNECTED, LOGOUT, CHAT_STARTED, MESSAGE_SENT, TYPING, PRIVATE_MESSAGE, NEW_CHAT } = require('./events');
+const { USER_CONNECTED, USER_DISCONNECTED, LOGOUT, CHAT_STARTED, MESSAGE_SENT, CHAT_DELETED, CHAT_TO_REMOVE, TYPING, PRIVATE_MESSAGE, NEW_CHAT } = require('./events');
 
 let connectedUsers = { }
 
@@ -45,6 +45,13 @@ module.exports = function(socket) {
         if (receiverId in connectedUsers) {
             const receiverSocket = connectedUsers[receiverId].socket_id
             socket.to(receiverSocket).emit(NEW_CHAT, chat)
+        }
+    })
+
+    socket.on(CHAT_DELETED, ({ chatId, receiverId }) => {
+        if (receiverId in connectedUsers) {
+            const receiverSocket = connectedUsers[receiverId].socket_id
+            socket.to(receiverSocket).emit(CHAT_TO_REMOVE, chatId)
         }
     })
 
