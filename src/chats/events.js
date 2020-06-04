@@ -7,4 +7,6 @@ module.exports = {
     TYPING: "TYPING",
     PRIVATE_MESSAGE: "PRIVATE_MESSAGE",
     LOGOUT: "LOGOUT",
+    CHAT_STARTED: "CHAT_STARTED",
+    NEW_CHAT: "NEW_CHAT"
 }
