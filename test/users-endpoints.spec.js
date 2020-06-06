@@ -201,12 +201,20 @@ describe('Users Endpoints', function() {
                 }
 
                 const expectedUserInformation = helpers.makeExpectedUserInformation(testUsers[idToUpdate-1])
+                
+                const expectedValues = {
+                    // LIC
+                    location: { lat: 40.7628, lng: -73.9341 },
+                    radius: (1).toFixed(2)
+                }
+
 
                 const expectedUser = {
                     ...expectedUserInformation,
-                    ...updateUser
+                    ...expectedValues
                 }
 
+                
                 return supertest(app)
                     .patch(`/api/users/${idToUpdate}`)
                     .set('Authorization', helpers.makeAuthHeader(testUsers[idToUpdate-1]))

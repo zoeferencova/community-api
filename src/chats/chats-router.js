@@ -18,9 +18,10 @@ chatsRouter
     .post(jsonBodyParser, (req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         const { user2Id, postId } = req.body;
-        const newChat = { user1_id: parseInt(userId), user2_id: parseInt(user2Id), post_id: parseInt(postId) };
 
-        for (const [key, value] of Object.entries(newChat)) {
+        const requiredValues = { user2Id, postId };
+
+        for (const [key, value] of Object.entries(requiredValues)) {
             if (value === '' || value === undefined) {
                 return res.status(400).json({
                     error: {
@@ -29,6 +30,8 @@ chatsRouter
                 })
             }
         }
+
+        const newChat = { user1_id: parseInt(userId), user2_id: parseInt(user2Id), post_id: parseInt(postId) };
 
         ChatsService.insertChat(
             req.app.get('db'),

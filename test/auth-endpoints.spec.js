@@ -1,5 +1,6 @@
 const knex = require('knex');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs')
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
@@ -81,11 +82,14 @@ describe('Auth Endpoints', function() {
                     algorithm: 'HS256',
                 }
             )
+
             return supertest(app)
                 .post('/api/auth/login')
                 .send(userValidCreds)
-                .expect(200, {
-                    authToken: expectedToken
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.authToken).to.eql(expectedToken)
+                    expect(res.body).to.have.property('user')
                 })
         })
     })

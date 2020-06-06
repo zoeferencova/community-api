@@ -5,7 +5,7 @@ const helpers = require('./test-helpers');
 describe('Posts Endpoints', function() {
     let db;
 
-    const { testUsers, testPosts, testCategories, testPostCategoryAssoc } = helpers.makeFixtures();
+    const { testUsers, testPosts, testCategories, testPostCategoryAssoc, testChats, testMessages } = helpers.makeFixtures();
 
     before('make knex instance', () => {
         db = knex({
@@ -28,7 +28,9 @@ describe('Posts Endpoints', function() {
                 testUsers,
                 testPosts,
                 testCategories,
-                testPostCategoryAssoc
+                testPostCategoryAssoc,
+                testChats,
+                testMessages
             )
         )
     
