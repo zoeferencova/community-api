@@ -15,27 +15,11 @@ const messagesRouter = require('./messages/messages-router');
 
 // App and server setup
 const app = express();
-app.options('*', cors())
-app.use(cors());
 const server = require('http').Server(app);
 
-var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
-    // intercept OPTIONS method
-    if ('OPTIONS' == req.method) {
-      res.send(200);
-    }
-    else {
-      next();
-    }
-};
-
-app.use(allowCrossDomain)
-
 // Middleware setup
+app.use(cors());
+app.options('*', cors());
 const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'dev';
 app.use(morgan(morganOption));
 app.use(helmet());
