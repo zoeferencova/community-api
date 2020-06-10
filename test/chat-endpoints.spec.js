@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Chats Endpoints', function() {
+describe('Chats Endpoints', function() {
     let db;
 
     const { testUsers, testPosts, testCategories, testPostCategoryAssoc, testChats, testMessages } = helpers.makeFixtures();

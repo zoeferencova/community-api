@@ -51,7 +51,9 @@ describe('Posts Endpoints', function() {
                 testUsers,
                 testPosts,
                 testCategories,
-                testPostCategoryAssoc
+                testPostCategoryAssoc,
+                testChats,
+                testMessages
             )
         )
 
@@ -82,7 +84,9 @@ describe('Posts Endpoints', function() {
                 testUsers,
                 testPosts,
                 testCategories,
-                testPostCategoryAssoc
+                testPostCategoryAssoc,
+                testChats,
+                testMessages
             )
         )
 
@@ -145,7 +149,9 @@ describe('Posts Endpoints', function() {
                     testUsers,
                     testPosts,
                     testCategories,
-                    testPostCategoryAssoc
+                    testPostCategoryAssoc,
+                    testChats,
+                    testMessages
                 )
             )
 
@@ -164,7 +170,9 @@ describe('Posts Endpoints', function() {
                     testUsers,
                     testPosts,
                     testCategories,
-                    testPostCategoryAssoc
+                    testPostCategoryAssoc,
+                    testChats,
+                    testMessages
                 )
             )
 
@@ -187,7 +195,9 @@ describe('Posts Endpoints', function() {
                     testUsers,
                     testPosts,
                     testCategories,
-                    testPostCategoryAssoc
+                    testPostCategoryAssoc,
+                    testChats,
+                    testMessages
                 )
             )
 
@@ -206,7 +216,9 @@ describe('Posts Endpoints', function() {
                     testUsers,
                     testPosts,
                     testCategories,
-                    testPostCategoryAssoc
+                    testPostCategoryAssoc,
+                    testChats,
+                    testMessages
                 )
             )
 
@@ -327,7 +339,9 @@ describe('Posts Endpoints', function() {
                     testUsers,
                     testPosts,
                     testCategories,
-                    testPostCategoryAssoc
+                    testPostCategoryAssoc,
+                    testChats,
+                    testMessages
                 )
             )
 
@@ -346,7 +360,9 @@ describe('Posts Endpoints', function() {
                     testUsers,
                     testPosts,
                     testCategories,
-                    testPostCategoryAssoc
+                    testPostCategoryAssoc,
+                    testChats,
+                    testMessages
                 )
             )
 

@@ -12,8 +12,8 @@ messagesRouter
         const sender_id = AuthService.getUserId(req.get('Authorization'));
         const { chat_id, message_content } = req.body;
         const newMessage = { 
-            sender_id: parseInt(sender_id), 
-            chat_id: parseInt(chat_id),
+            sender_id: sender_id, 
+            chat_id: chat_id,
             message_content: message_content
         };
 
