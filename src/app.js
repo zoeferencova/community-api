@@ -15,6 +15,7 @@ const messagesRouter = require('./messages/messages-router');
 
 // App and server setup
 const app = express();
+app.options('*', cors())
 const server = require('http').Server(app);
 
 // Middleware setup
@@ -22,7 +23,6 @@ const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'dev';
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
-app.options('*', cors())
 
 // Router setup
 app.use('/api/auth', authRouter);
