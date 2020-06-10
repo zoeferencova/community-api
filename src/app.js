@@ -24,7 +24,7 @@ app.use(helmet());
 app.use(cors());
 
 // Router setup
-app.use('/api/auth', authRouter);
+app.use('/api/auth', cors(), authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/chats', chatsRouter);
