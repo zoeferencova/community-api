@@ -23,12 +23,6 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-  });
-
-
 // Router setup
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
