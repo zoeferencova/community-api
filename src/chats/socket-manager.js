@@ -6,6 +6,7 @@ let connectedUsers = { }
 
 module.exports = function(socket) {
     console.log(`Socket id: ${socket.id}`)
+    console.log(connectedUsers)
 
     let sendTypingFromUser;
 
@@ -15,6 +16,7 @@ module.exports = function(socket) {
         socket.user = user;
 
         sendTypingFromUser = sendTypingToChat(user)
+        console.log('connected test: ', connectedUsers)
 
         io.emit(USER_CONNECTED, connectedUsers)
     })
@@ -23,14 +25,12 @@ module.exports = function(socket) {
         if ("user" in socket) {
             connectedUsers = removeUser(connectedUsers, socket.user.id)
             io.emit(USER_DISCONNECTED, connectedUsers)
-            console.log(connectedUsers)
         }
     })
 
     socket.on(LOGOUT, () => {
         connectedUsers = removeUser(connectedUsers, socket.user.id)
         io.emit(USER_DISCONNECTED, connectedUsers)
-        console.log('disconnect', connectedUsers)
     })
 
     socket.on(MESSAGE_SENT, ({ sender, receiverId, message }) => {
