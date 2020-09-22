@@ -123,7 +123,7 @@ usersRouter
                             res.status(204).end()
                         })
                         .catch(next)
-                })
+                })   
         } else {
             UsersService.updateUser(
                 req.app.get('db'),
@@ -133,7 +133,9 @@ usersRouter
                 .then(numRowsAffected => {
                     res.status(204).end()
                 })
-                .catch(next)
+                .catch(response => {
+                    res.status(400).json({ error: "Email address is taken" })
+                })
         }
     })
     .delete((req, res, next) => {
