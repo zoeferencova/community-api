@@ -4,6 +4,7 @@ const AuthService = require('../auth/auth-service');
 const UsersService = require('../users/users-service');
 const PostsService = require('./posts-service');
 const CategoryPostService = require('../category-post/category-post-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 const postsRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -24,6 +25,7 @@ const sanitizeResponse = post => ({
 
 postsRouter
     .route('/')
+    .all(requireAuth)
     .get((req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         PostsService.getUserPosts(req.app.get('db'), userId)
@@ -34,7 +36,6 @@ postsRouter
                 return res.json(posts.map(sanitizeResponse))
             })
     })
-
     .post(jsonBodyParser, (req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         const { post_type, category_ids } = req.body;
@@ -73,6 +74,7 @@ postsRouter
 
 postsRouter
     .route('/neighborhood-posts')
+    .all(requireAuth)
     .get((req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
@@ -88,6 +90,7 @@ postsRouter
 
 postsRouter
     .route('/:id')
+    .all(requireAuth)
     .all((req, res, next) => {
         PostsService.getPostById(
             req.app.get('db'),

@@ -1,6 +1,7 @@
 const express = require('express');
 const AuthService = require('./auth-service');
 const UsersService = require('../users/users-service');
+const { requireAuth } = require('../middleware/jwt-auth')
 
 const authRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -61,7 +62,9 @@ authRouter
     })
 
 authRouter
-    .post('/confirm-password', jsonBodyParser, (req, res, next) => {
+    .route('/confirm-password')
+    .all(requireAuth)
+    .post(jsonBodyParser, (req, res, next) => {
         const { password } = req.body;
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)

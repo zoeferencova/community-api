@@ -3,12 +3,15 @@ const path = require('path');
 const UsersService = require('./users-service');
 const AuthService = require('../auth/auth-service');
 const PostsService = require('../posts/posts-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 const usersRouter = express.Router();
 const jsonBodyParser = express.json();
 
 usersRouter
-    .get('/', (req, res, next) => {
+    .route('/')
+    .all(requireAuth)
+    .get((req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
@@ -16,7 +19,7 @@ usersRouter
                 return res.json(user)
             })
     })
-    .post('/', jsonBodyParser, (req, res, next) => {
+    .post(jsonBodyParser, (req, res, next) => {
         const { password, email, first_name } = req.body;
 
         for(const field of ['first_name', 'email', 'password']) {
@@ -67,6 +70,7 @@ usersRouter
 
 usersRouter
     .route('/:id')
+    .all(requireAuth)
     .all((req, res, next) => {
         const userId = req.params.id;
         UsersService.getUserInfo(req.app.get('db'), userId)

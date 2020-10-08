@@ -1,12 +1,14 @@
 const express = require('express');
 const ChatsService = require('./chats-service');
 const AuthService = require('../auth/auth-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 const chatsRouter = express.Router();
 const jsonBodyParser = express.json();
 
 chatsRouter
     .route('/')
+    .all(requireAuth)
     .get((req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         ChatsService.getUserChats(req.app.get('db'), userId)
@@ -49,6 +51,7 @@ chatsRouter
 
 chatsRouter
     .route('/:id')
+    .all(requireAuth)
     .all((req, res, next) => {
         ChatsService.getNewChatById(
             req.app.get('db'),

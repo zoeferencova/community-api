@@ -2,12 +2,14 @@ const express = require('express');
 const MessagesService = require('./messages-service');
 const AuthService = require('../auth/auth-service');
 const ChatsService = require('../chats/chats-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 const messagesRouter = express.Router();
 const jsonBodyParser = express.json();
 
 messagesRouter
     .route('/')
+    .all(requireAuth)
     .post(jsonBodyParser, (req, res, next) => {
         const sender_id = AuthService.getUserId(req.get('Authorization'));
         const { chat_id, message_content } = req.body;
