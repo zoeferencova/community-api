@@ -66,3 +66,7 @@ Endpoints used to create a new message written by the User whose Token is provid
 ## Demo Account
 
 To access the demo account, click on the "See a demo" button on the landing page. You will be automatically logged in as a demo user and able to use the app as a regular user.
+
+## Frontend
+
+The frontend repository for the app using this API can be found [here](https://github.com/zoeferencova/community-frontend).
