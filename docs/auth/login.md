@@ -34,12 +34,12 @@ Used to collect a Token for a registered User.
 
 ```json
 {
-    "authToken": "93144b288eb1fdccbe46d6fc0f241a51766ecd3d",
+    "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJpYXQiOjE2MDIxOTYyNjAsInN1YiI6ImphbWVzQGdtYWlsLmNvbSJ9.dZt6KK08u758KX0klU0xOROob_JWvfHMN6qgK0OgxMa",
     "user": {
         "id": 2,
         "first_name": "James",
         "email": "james@gmail.com",
-        "password": "$2a$12$YCjloLSk7njYXdG5xnX1dOTvhObUR2EmiS.vwc9jIT7Hv0zGzHSTy",
+        "password": "$2a$12$YCjloLSk7njYXdG5xnX1dOTvhObUR2EmiS.vwc9jIT7Hv0zGzHSTz",
         "location": "0101000020E61000002A15F99A0A7A52C0EC1D24FA6B604440",
         "radius": "4828.02"
     }
