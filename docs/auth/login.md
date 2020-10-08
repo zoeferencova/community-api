@@ -48,7 +48,7 @@ Used to collect a Token for a registered User.
 
 ## Error Response
 
-**Condition** : If 'email' and 'password' combination is wrong or if user with provided 'email' does not exist.
+**Condition** : If "email" and "password" combination is wrong or if user with provided "email" does not exist.
 
 **Code** : `400 BAD REQUEST`
 
