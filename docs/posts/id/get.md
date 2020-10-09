@@ -41,21 +41,7 @@ Get post by post ID.
 
 ## Error Responses
 
-**Condition** : If current logged in User is not authorized to view the post.
-
-**Code** : `401 UNAUTHORIZED`
-
-**Content** : 
-
-```json
-{
-    "error": "Unauthorized request"
-}
-```
-
-### Or
-
-**Condition** : If post does not exist
+**Condition** : If there is no post with the supplied ID.
 
 **Code** : `404 NOT FOUND`
 
@@ -66,5 +52,33 @@ Get post by post ID.
     "error": {
         "message": "Post doesn't exist"
     }
+}
+```
+
+### OR
+
+**Condition** : If there is no Authorization Token provided with the request.
+
+**Code** : `401 UNAUTHORIZED`
+
+**Content**
+
+```json
+{
+    "error": "Missing bearer token"
+}
+```
+
+### OR
+
+**Condition** : If the provided Authorization Token is not valid.
+
+**Code** : `401 UNAUTHORIZED`
+
+**Content**
+
+```json
+{
+    "error": "Unauthorized request"
 }
 ```
