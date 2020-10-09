@@ -61,3 +61,7 @@ Delete a post by ID.
     "error": "Unauthorized request"
 }
 ```
+
+## Notes
+
+* If a post is deleted, all chats and messages that correspond with this post will be deleted as well.
