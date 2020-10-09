@@ -10,8 +10,7 @@ const jsonBodyParser = express.json();
 
 usersRouter
     .route('/')
-    .all(requireAuth)
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
         UsersService.getUserInfo(req.app.get('db'), userId)
             .then(user => {
