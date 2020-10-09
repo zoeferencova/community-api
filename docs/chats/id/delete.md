@@ -64,4 +64,4 @@ Delete a chat by ID.
 
 ## Notes
 
-* If a chat is deleted, all messages that correspond with this PM will be deleted as well.
+* If a chat is deleted, all messages that correspond with the chat will be deleted as well.
