@@ -4,7 +4,7 @@ Update a user by ID.
 
 **URL** : `/api/users/:id/`
 
-**URL Parameters** : `id=[integer]` where `id` is the ID of the post.
+**URL Parameters** : `id=[integer]` where `id` is the ID of the user.
 
 **Method** : `PATCH`
 
