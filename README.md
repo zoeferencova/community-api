@@ -36,8 +36,8 @@ Endpoints used to view and manipulate post data associated with the User whose T
 * [Get Neighborhood Posts](docs/posts/get-neighborhood.md) : `GET /api/posts/neighborhood-posts`
 * [Create Post](docs/posts/post.md) : `POST /api/posts`
 * [Get Post by ID](docs/posts/id/get.md) : `GET /api/posts/:id`
-* [Update List Item by ID](docs/posts/id/patch.md) : `PATCH /api/posts/:id`
-* [Delete List Item by ID](docs/posts/id/delete.md) : `DELETE /api/posts/:id`
+* [Update Post by ID](docs/posts/id/patch.md) : `PATCH /api/posts/:id`
+* [Delete Post by ID](docs/posts/id/delete.md) : `DELETE /api/posts/:id`
 
 ### Chat Endpoints
 
