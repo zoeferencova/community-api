@@ -138,7 +138,7 @@ usersRouter
                         const sub = itemToUpdate.email;
                         const payload = { user_id: req.params.id };
                         let user;
-                        UsersService.getUserInfo(req.app.get('db'), userId)
+                        UsersService.getUserInfo(req.app.get('db'), req.params.id)
                             .then(user => {
                                 PostsService.fixLocationAndRadius(user)
                                 user = res.json(user)
