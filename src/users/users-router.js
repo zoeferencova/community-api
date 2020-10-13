@@ -137,15 +137,15 @@ usersRouter
                     if (itemToUpdate.email !== undefined ) {
                         const sub = itemToUpdate.email;
                         const payload = { user_id: req.params.id };
-                        let user;
+                        let currentUser;
                         UsersService.getUserInfo(req.app.get('db'), req.params.id)
                             .then(user => {
                                 PostsService.fixLocationAndRadius(user)
-                                user = res.json(user)
+                                currentUser = res.json(user)
                             })
                         res.send({
                             authToken: AuthService.createJwt(sub, payload),
-                            user
+                            currentUser
                         })
                     } 
                 })
