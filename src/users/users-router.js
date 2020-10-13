@@ -69,7 +69,6 @@ usersRouter
 
 usersRouter
     .route('/:id')
-    .all(requireAuth)
     .all((req, res, next) => {
         const userId = req.params.id;
         UsersService.getUserInfo(req.app.get('db'), userId)
@@ -133,22 +132,6 @@ usersRouter
                 req.params.id,
                 itemToUpdate
             )
-                .then(res => {
-                    if (itemToUpdate.email !== undefined ) {
-                        const sub = itemToUpdate.email;
-                        const payload = { user_id: req.params.id };
-                        let currentUser;
-                        UsersService.getUserInfo(req.app.get('db'), req.params.id)
-                            .then(user => {
-                                PostsService.fixLocationAndRadius(user)
-                                currentUser = res.json(user)
-                            })
-                        res.send({
-                            authToken: AuthService.createJwt(sub, payload),
-                            currentUser
-                        })
-                    } 
-                })
                 .then(numRowsAffected => {
                     res.status(204).end()
                 })
