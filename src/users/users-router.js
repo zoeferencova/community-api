@@ -125,7 +125,7 @@ usersRouter
                             res.status(204).end()
                         })
                         .catch(next)
-                })   
+                })
         } else {
             UsersService.updateUser(
                 req.app.get('db'),

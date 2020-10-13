@@ -87,5 +87,16 @@ authRouter
             })
     })
 
+authRouter
+    .route('/update-jwt')
+    .post(jsonBodyParser, (req, res, next) => {
+        const { email, userId } = req.body;
+        const sub = email;
+        const payload = { user_id: userId };
+
+        return res.send({
+            authToken: AuthService.createJwt(sub, payload),
+        })    
+    })
 
 module.exports = authRouter;
