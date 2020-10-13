@@ -133,6 +133,22 @@ usersRouter
                 req.params.id,
                 itemToUpdate
             )
+                .then(res => {
+                    if (itemToUpdate.email !== undefined ) {
+                        const sub = itemToUpdate.email;
+                        const payload = { user_id: req.params.id };
+                        let user;
+                        UsersService.getUserInfo(req.app.get('db'), userId)
+                            .then(user => {
+                                PostsService.fixLocationAndRadius(user)
+                                user = res.json(user)
+                            })
+                        res.send({
+                            authToken: AuthService.createJwt(sub, payload),
+                            user
+                        })
+                    } 
+                })
                 .then(numRowsAffected => {
                     res.status(204).end()
                 })
