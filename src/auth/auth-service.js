@@ -4,6 +4,7 @@ const config = require('../config');
 
 const AuthService = {
     getUserWithEmail(db, email) {
+        db('community_users').then(result => console.log(result))
         return db('community_users')
             .where({ email })
             .first()
