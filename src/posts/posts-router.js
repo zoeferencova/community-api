@@ -35,7 +35,6 @@ postsRouter
                 })
                 return res.json(posts.map(sanitizeResponse))
             })
-            .catch(next)
     })
     .post(jsonBodyParser, (req, res, next) => {
         const userId = AuthService.getUserId(req.get('Authorization'));
