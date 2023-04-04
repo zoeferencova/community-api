@@ -38,7 +38,7 @@ authRouter
         )
             .then(dbUser => {
                 if (!dbUser) {
-                    return res.status(400).json({ error: `Incorrect email or password`})  
+                    return res.status(400).json({ error: `Incorrect email or password` })
                 }
                 return AuthService.comparePasswords(loginUser.password, dbUser.password)
                     .then(compareMatch => {
@@ -47,7 +47,7 @@ authRouter
                                 error: `Incorrect email or password`
                             })
                         }
-                        
+
                         const sub = dbUser.email;
                         const payload = { user_id: dbUser.id };
 
@@ -58,7 +58,7 @@ authRouter
                     }).catch(next)
             })
 
-        .catch(next)
+            .catch(next)
     })
 
 authRouter
@@ -76,14 +76,14 @@ authRouter
                                 if (!compareMatch) {
                                     return res.status(400).json({
                                         error: `Incorrect old password`
-                                    }) 
+                                    })
                                 } else {
                                     return res.send('correct')
                                 }
-                                
+
                             })
                     }).catch(next)
-                
+
             }).catch(next)
     })
 
@@ -96,7 +96,7 @@ authRouter
 
         return res.send({
             authToken: AuthService.createJwt(sub, payload),
-        })    
+        })
     })
 
 module.exports = authRouter;

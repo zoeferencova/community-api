@@ -2,11 +2,10 @@ const { io } = require('../app');
 const { createMessage } = require('./factories');
 const { USER_CONNECTED, USER_DISCONNECTED, LOGOUT, CHAT_STARTED, MESSAGE_SENT, CHAT_DELETED, CHAT_TO_REMOVE, TYPING, PRIVATE_MESSAGE, NEW_CHAT } = require('./events');
 
-let connectedUsers = { }
+let connectedUsers = {}
 
-module.exports = function(socket) {
+module.exports = function (socket) {
     console.log(`Socket id: ${socket.id}`)
-    console.log(connectedUsers)
 
     let sendTypingFromUser;
 
@@ -15,8 +14,9 @@ module.exports = function(socket) {
         connectedUsers = addUser(connectedUsers, user);
         socket.user = user;
 
+        console.log(connectedUsers)
+
         sendTypingFromUser = sendTypingToChat(user)
-        console.log('connected test: ', connectedUsers)
 
         io.emit(USER_CONNECTED, connectedUsers)
     })

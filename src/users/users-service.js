@@ -18,7 +18,7 @@ const UsersService = {
                 'user.radius'
             )
             .where('user.id', '=', userId)
-            .first()  
+            .first()
     },
     hasUserWithEmail(db, email) {
         return db('community_users')

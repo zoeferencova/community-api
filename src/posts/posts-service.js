@@ -15,7 +15,7 @@ const PostsService = {
                 'community_posts.post_type',
                 'community_posts.description',
                 'community_posts.urgency',
-                'community_posts.date_created',
+                db.raw('community_posts.date_created::timestamptz'),
                 'community_users.location AS location',
                 db.raw(`ST_X(location::geometry) AS lng`),
                 db.raw(`ST_Y(location::geometry) AS lat`),
@@ -40,7 +40,7 @@ const PostsService = {
                 'community_posts.post_type',
                 'community_posts.description',
                 'community_posts.urgency',
-                'community_posts.date_created',
+                db.raw('community_posts.date_created::timestamptz'),
                 'community_users.location AS location',
                 db.raw(`ST_X(location::geometry) AS lng`),
                 db.raw(`ST_Y(location::geometry) AS lat`),
@@ -66,7 +66,7 @@ const PostsService = {
                 'community_posts.post_type',
                 'community_posts.description',
                 'community_posts.urgency',
-                'community_posts.date_created',
+                db.raw('community_posts.date_created::timestamptz'),
                 'community_users.location AS location',
                 db.raw(`ST_X(location::geometry) AS lng`),
                 db.raw(`ST_Y(location::geometry) AS lat`),
@@ -83,11 +83,11 @@ const PostsService = {
             .insert(newPost)
             .into('community_posts')
             .returning('id')
-            .then(res => CategoryPostService.insertAssoc(db, parseInt(res), catIds))
+            .then(res => CategoryPostService.insertAssoc(db, parseInt(res[0].id), catIds))
             .then(([assoc]) => assoc)
             .then(assoc => {
                 return PostsService.getPostById(db, parseInt(assoc.post_id))
-            })           
+            })
     },
     updatePost(db, postId, newPost) {
         return db
@@ -98,14 +98,14 @@ const PostsService = {
     deletePost(db, postId) {
         return db
             .from('community_posts')
-            .where({ id: parseInt(postId)})
+            .where({ id: parseInt(postId) })
             .del()
     },
     fixLocationAndRadius(item) {
         item.location = { lat: item.lat, lng: item.lng }
         delete item.lng
         delete item.lat
-        item.radius = parseFloat(item.radius/1609.344).toFixed(2)
+        item.radius = parseFloat(item.radius / 1609.344).toFixed(2)
         return item;
     }
 }

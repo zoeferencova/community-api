@@ -37,7 +37,12 @@ knexPostgis(db);
 app.set('db', db);
 
 // Socket.io setup
-const io = module.exports.io = require('socket.io')(server);
+const io = module.exports.io = require('socket.io')(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"]
+    }
+});
 const SocketManager = require('./chats/socket-manager');
 io.on('connection', SocketManager);
 

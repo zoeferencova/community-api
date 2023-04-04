@@ -1,4 +1,4 @@
-const createMessage = ({ message, sender }) => {    
+const createMessage = ({ message, sender }) => {
     return {
         id: message.id,
         message_timestamp: new Date(Date.now()),
@@ -11,5 +11,4 @@ const createMessage = ({ message, sender }) => {
 module.exports = {
     createMessage,
 }
-    
- 
+

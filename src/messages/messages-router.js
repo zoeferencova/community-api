@@ -13,8 +13,8 @@ messagesRouter
     .post(jsonBodyParser, (req, res, next) => {
         const sender_id = AuthService.getUserId(req.get('Authorization'));
         const { chat_id, message_content } = req.body;
-        const newMessage = { 
-            sender_id: sender_id, 
+        const newMessage = {
+            sender_id: sender_id,
             chat_id: chat_id,
             message_content: message_content
         };
@@ -38,7 +38,7 @@ messagesRouter
                         }
                     })
                 }
-        
+
                 if (parseInt(chat.user1.id) !== parseInt(sender_id) && parseInt(chat.user2.id) !== parseInt(sender_id)) {
                     return res.status(400).json({
                         error: {

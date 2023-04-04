@@ -85,7 +85,7 @@ postsRouter
                         return res.json(posts.map(sanitizeResponse))
                     })
             })
-        
+
     })
 
 postsRouter
@@ -119,7 +119,7 @@ postsRouter
     .patch(jsonBodyParser, (req, res, next) => {
         const postToUpdate = req.body;
         const possibleValues = ['description', 'urgency', 'category_ids']
-    
+
         const irrelevantValues = Object.keys(postToUpdate).filter(key => !possibleValues.includes(key))
 
         irrelevantValues.forEach(value => {
@@ -128,7 +128,7 @@ postsRouter
 
         const numberOfRelevantValues = Object.values(postToUpdate).filter(Boolean).length;
 
-        const updatePost = () =>  {
+        const updatePost = () => {
             delete postToUpdate.category_ids;
 
             PostsService.updatePost(
@@ -136,10 +136,10 @@ postsRouter
                 req.params.id,
                 postToUpdate,
             )
-            .then(numberOfRowsAffected => {
-                res.status(204).end()
-            })
-            .catch(next)
+                .then(numberOfRowsAffected => {
+                    res.status(204).end()
+                })
+                .catch(next)
         }
 
         // Delete old associations and insert new ones
@@ -185,23 +185,23 @@ postsRouter
         if (!postToUpdate.category_ids) {
             updatePost()
 
-        // If update object contains only category_ids
+            // If update object contains only category_ids
         } else if (numberOfRelevantValues === 1 && postToUpdate.category_ids) {
             updateCategoryPostAssoc()
-        
-        // If update object contains category_ids and other item(s)
+
+            // If update object contains category_ids and other item(s)
         } else if (numberOfRelevantValues > 1 && postToUpdate.category_ids) {
             updateCategoryPostAssoc()
             updatePost()
-        } 
+        }
     })
     .delete((req, res, next) => {
         const postId = req.params.id;
         PostsService.deletePost(req.app.get('db'), postId)
-           .then(id => {
-               res.status(204).end()
-           })
-           .catch(next)
+            .then(id => {
+                res.status(204).end()
+            })
+            .catch(next)
     })
 
 module.exports = postsRouter;
