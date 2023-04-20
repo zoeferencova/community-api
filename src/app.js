@@ -32,7 +32,7 @@ app.use('/api/chats', chatsRouter);
 app.use('/api/messages', messagesRouter);
 
 // Knex and Knex Postgis setup
-const db = knex({ client: 'pg', connection: DATABASE_URL });
+const db = knex({ client: 'pg', connection: DATABASE_URL, ssl: { rejectUnauthorized: false } });
 knexPostgis(db);
 app.set('db', db);
 
