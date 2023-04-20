@@ -39,7 +39,7 @@ app.set('db', db);
 // Socket.io setup
 const io = module.exports.io = require('socket.io')(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://comm-unity.vercel.app",
         methods: ["GET", "POST"]
     }
 });
